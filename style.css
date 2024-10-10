@@ -1,0 +1,7 @@
+@import url('https://fonts.googleapis.com/css2?family=Thasadith:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+body * {
+    font-family: "Thasadith", sans-serif !important;
+    /* font-size: 30px; */
+    /* font-weight: 500; */
+    color: #091747;
+}
