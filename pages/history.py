@@ -20,6 +20,7 @@ st.markdown("""
 config = read_config_yaml('config.yaml')
 HISTORY_DATA_PATH = config['HISTORY_DATA_PATH']
 WEAPON_DATA_PATH = config['WEAPON_DATA_PATH']
+IMAGES_HISTORY_PATH = config['IMAGES_HISTORY_PATH']
 
 st.title('ประวัติการเบิกจ่ายอาวุธ')
 
@@ -61,7 +62,7 @@ if current_weapon_id:
 
     ims = []
     for i in df_history_current_weapon_barcode['timestamp']:
-        image_path = 'data/images/' + i + '.jpg'
+        image_path = IMAGES_HISTORY_PATH + i + '.jpg'
         try:
             im = img_to_base64(image_path)
             ims.append(im)
@@ -82,7 +83,7 @@ if current_weapon_id:
 else:
     ims = []
     for i in df_history['timestamp']:
-        image_path = 'data/images/' + i + '.jpg'
+        image_path = IMAGES_HISTORY_PATH + i + '.jpg'
         try:
             im = img_to_base64(image_path)
             ims.append(im)

@@ -8,6 +8,7 @@ import pygame
 from utils import generate_link_qr,gen_wifi_qr,set_hotspot,get_wifi_interface,get_ip,list_wifi_networks,read_config_yaml,img_to_base64
 import requests
 import threading
+import time
 
 st.set_page_config(layout="wide", initial_sidebar_state="collapsed")
 with open( "style.css" ) as css:
@@ -36,6 +37,7 @@ PERSON_DATA_PATH = config['PERSON_DATA_PATH']
 HISTORY_DATA_PATH = config['HISTORY_DATA_PATH']
 UNIT_NAME = config['UNIT_NAME']
 LOGO_PATH = config['LOGO_PATH']
+IMAGES_HISTORY_PATH = config['IMAGES_HISTORY_PATH']
 check_match = config['CHECK_MATCH']
 LINE_TOKENS = []
 for i in range(1,4):
@@ -52,11 +54,11 @@ if "current_person" not in st.session_state:
 def play_voice(action):
     pygame.mixer.init()
     if action == 'in':
-        pygame.mixer.music.load("data/voices/in.mp3")
+        pygame.mixer.music.load("static/voices/in.mp3")
     elif action == 'out':
-        pygame.mixer.music.load("data/voices/out.mp3")
+        pygame.mixer.music.load("static/voices/out.mp3")
     elif action == 'notmatch':
-        pygame.mixer.music.load("data/voices/notmatch.mp3")
+        pygame.mixer.music.load("static/voices/notmatch.mp3")
     pygame.mixer.music.play()
     while pygame.mixer.music.get_busy():
         pygame.time.Clock().tick(10)   
@@ -187,7 +189,7 @@ if input_text == BARCODE_HISTORY or input_text == '1':
 
         ims = []
         for i in df_history_current_weapon_barcode['timestamp']:
-            image_path = 'data/images/' + i + '.jpg'
+            image_path = IMAGES_HISTORY_PATH + i + '.jpg'
             try:
                 im = img_to_base64(image_path)
                 ims.append(im)
@@ -208,7 +210,7 @@ if input_text == BARCODE_HISTORY or input_text == '1':
     else:
         ims = []
         for i in df_history['timestamp']:
-            image_path = 'data/images/' + i + '.jpg'
+            image_path = IMAGES_HISTORY_PATH + i + '.jpg'
             try:
                 im = img_to_base64(image_path)
                 ims.append(im)
@@ -228,7 +230,7 @@ if input_text == BARCODE_HISTORY or input_text == '1':
         )
 
 # status
-elif input_text == BARCODE_STATUS or input_text == '2':
+elif input_text == BARCODE_STATUS or input_text == '2' or input_text == '3':
     st.title('สถานภาพปัจจุบัน')
     cols = st.columns(len(unique_types))
 
@@ -249,8 +251,13 @@ elif input_text == BARCODE_STATUS or input_text == '2':
             df_in.index = df_in.index + 1  # Adjust index to start from 1
 
             df_in = df_in[['weapon_id','person_respon_name']]
-            st.write(df_in)
-
+            if input_text == '2':
+                st.write(df_in)
+            elif input_text == '3':
+                df_in = df_in.sort_values(by='weapon_id')
+                wid = ' '.join(list(df_in['weapon_id']))
+                st.write(wid)
+                
             st.subheader(f'อาวุธนอกคลัง {len(weapons_outs[unique_types[i]])} กระบอก')
             df_out = df_weapon[(df_weapon['instock'] == 'False') & (df_weapon['type'] == unique_types[i])]
             person_respon_names = []
@@ -276,7 +283,13 @@ elif input_text == BARCODE_STATUS or input_text == '2':
             except:
                 df_out = df_out[['weapon_id','person_respon_name']]
 
-            st.write(df_out)
+            
+            if input_text == '2':
+                st.write(df_out)
+            elif input_text == '3':
+                df_out = df_out.sort_values(by='weapon_id')
+                wid = ' '.join(list(df_out['weapon_id']))
+                st.write(wid)
 
 # reset 
 elif input_text == BARCODE_RESET or input_text == 'r':
@@ -473,7 +486,7 @@ else:
             ret, frame = cap.read()
             image_path = None
             if ret:
-                directory = 'data/images'
+                directory = IMAGES_HISTORY_PATH
                 if not os.path.exists(directory):
                     os.makedirs(directory)
                 image_path = f"{directory}/{data['timestamp']}.jpg"
@@ -499,6 +512,7 @@ else:
             thread2 = threading.Thread(target=play_voice, args=(action,))
             thread2.start()
 
+            time.sleep(0.2)
             st.rerun()
 
         else:
@@ -513,6 +527,7 @@ else:
             st.session_state.history_current_weapon_barcode = ''
             st.session_state.input_text = ''
 
+            time.sleep(0.2)
             st.rerun()
 
 

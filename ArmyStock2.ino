@@ -90,16 +90,10 @@ void onShortPressButton3() {
   if (menu == 0) {
     Keyboard.print("1\n");
     menu++;
-  } 
-  else if (menu == 1) {
+  } else if (menu == 1) {
     Keyboard.print("2\n");
     menu++;
-  }
-  else if (menu == 2) {
-    Keyboard.print("3\n");
-    menu++;
-  } 
-  else if (menu == 3) {
+  } else if (menu == 2) {
     Keyboard.print("c\n");
     menu = 0;
   }
