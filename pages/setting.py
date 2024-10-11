@@ -99,9 +99,14 @@ with open('config.yaml', 'r', encoding='utf-8') as file:
     config = yaml.safe_load(file)
 
 
+if config['CHECK_MATCH']:
+    index = 0
+else:
+    index = 1
 setting_match = st.radio(
     "ตั้งค่าชื่อผู้รับผิดชอบกับผู้เบิก",
     ["ต้องตรงกัน", "ไม่จำเป็นต้องต้องกัน"],
+    index=index
 )
 unit_name = st.text_input('unit name',config['UNIT_NAME'])
 line_token1 = st.text_input('line token1',config['LINE_TOKEN1'])
