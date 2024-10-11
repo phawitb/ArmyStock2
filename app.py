@@ -301,239 +301,244 @@ elif input_text == BARCODE_RESET or input_text == 'r':
 elif input_text == BARCODE_HOTSPOT or input_text == 'shotspot':
     st.title('Setting & History')
 
-    #save current wifi list
-    wifi_networks,active_ssid = list_wifi_networks() 
-    with open('wifi_list.txt', 'w') as file:
-        for item in wifi_networks:
-            file.write(f"{item}\n")
+    with st.spinner('Wait for it...'):
 
-    set_hotspot("MyHotspot", "abcd1234")
-    gen_wifi_qr("MyHotspot", "abcd1234")
-    interface_name = get_wifi_interface()
-    current_ip = get_ip(interface_name)
+        #save current wifi list
+        wifi_networks,active_ssid = list_wifi_networks() 
+        with open('wifi_list.txt', 'w') as file:
+            for item in wifi_networks:
+                file.write(f"{item}\n")
 
-    cols = st.columns(2)
-    #visualize 
-    # if active_ssid == "MyHotspot" or not active_ssid:
-    cols[0].subheader('STEP1 : Connect to MyHotspot')
-    cols[0].write('ssid: MyHotspot')
-    cols[0].write('password: abcd1234')
-    cols[0].image('qrcode_wifi.png',caption="qrcode_wifi")
-    url = f"http://{current_ip}:8509/setting"
-    generate_link_qr(url)
-    cols[1].subheader(f'STEP2 : Connect to {url}')
-    cols[1].image('qrcode_link.png')
+        set_hotspot("MyHotspot", "abcd1234")
+        gen_wifi_qr("MyHotspot", "abcd1234")
+        interface_name = get_wifi_interface()
+        current_ip = get_ip(interface_name)
+
+        cols = st.columns(2)
+        #visualize 
+        # if active_ssid == "MyHotspot" or not active_ssid:
+        cols[0].subheader('STEP1 : Connect to MyHotspot')
+        cols[0].write('ssid: MyHotspot')
+        cols[0].write('password: abcd1234')
+        cols[0].image('qrcode_wifi.png',caption="qrcode_wifi")
+        url = f"http://{current_ip}:8509/setting"
+        generate_link_qr(url)
+        cols[1].subheader(f'STEP2 : Connect to {url}')
+        cols[1].image('qrcode_link.png')
 
 
 # setting
 elif input_text == BARCODE_SETTING or input_text == 's':
     st.title('Setting & History')
 
-    #save current wifi list
-    wifi_networks,active_ssid = list_wifi_networks() 
-    with open('wifi_list.txt', 'w') as file:
-        for item in wifi_networks:
-            file.write(f"{item}\n")
+    with st.spinner('Wait for it...'):
 
-    #find current ip
-    interface_name = get_wifi_interface()
-    current_ip = get_ip(interface_name)
+        #save current wifi list
+        wifi_networks,active_ssid = list_wifi_networks() 
+        with open('wifi_list.txt', 'w') as file:
+            for item in wifi_networks:
+                file.write(f"{item}\n")
 
-    st.subheader(f'current_ip {current_ip}')
-    if not current_ip:
-        set_hotspot("MyHotspot", "abcd1234")
-        gen_wifi_qr("MyHotspot", "abcd1234")
-
+        #find current ip
+        interface_name = get_wifi_interface()
         current_ip = get_ip(interface_name)
 
-    cols = st.columns(2)
+        st.subheader(f'current_ip {current_ip}')
+        if not current_ip:
+            set_hotspot("MyHotspot", "abcd1234")
+            gen_wifi_qr("MyHotspot", "abcd1234")
 
-    #visualize 
-    if active_ssid == "MyHotspot" or not active_ssid:
-        cols[0].subheader('STEP1 : Connect to MyHotspot')
-        cols[0].write('ssid: MyHotspot')
-        cols[0].write('password: abcd1234')
-     
-        cols[0].image('qrcode_wifi.png',caption="qrcode_wifi")
+            current_ip = get_ip(interface_name)
 
-    else:
-        cols[0].subheader(f'STEP1 : Connect to ssid: {active_ssid}')
+        cols = st.columns(2)
 
-    url = f"http://{current_ip}:8509/setting"
-    generate_link_qr(url)
-    cols[1].subheader(f'STEP2 : Connect to {url}')
-    cols[1].image('qrcode_link.png')
+        #visualize 
+        if active_ssid == "MyHotspot" or not active_ssid:
+            cols[0].subheader('STEP1 : Connect to MyHotspot')
+            cols[0].write('ssid: MyHotspot')
+            cols[0].write('password: abcd1234')
+        
+            cols[0].image('qrcode_wifi.png',caption="qrcode_wifi")
+
+        else:
+            cols[0].subheader(f'STEP1 : Connect to ssid: {active_ssid}')
+
+        url = f"http://{current_ip}:8509/setting"
+        generate_link_qr(url)
+        cols[1].subheader(f'STEP2 : Connect to {url}')
+        cols[1].image('qrcode_link.png')
 
 # main
 else:
-    #clear current weapon and person
-    if input_text == BARCODE_CLEAR or input_text == 'c':
-        st.session_state.current_weapon = ''
-        st.session_state.current_person = ''
+    with st.spinner('Wait for it...'):
+        #clear current weapon and person
+        if input_text == BARCODE_CLEAR or input_text == 'c':
+            st.session_state.current_weapon = ''
+            st.session_state.current_person = ''
 
-    # head status
-    col1, col2, col3 = st.columns([1,8,1])
-    with col1:
-        st.image(LOGO_PATH, use_column_width=True)
-    with col2:
-        example_header(UNIT_NAME)
-    with col3:
-        pass
+        # head status
+        col1, col2, col3 = st.columns([1,8,1])
+        with col1:
+            st.image(LOGO_PATH, use_column_width=True)
+        with col2:
+            example_header(UNIT_NAME)
+        with col3:
+            pass
 
-    st.markdown("""---""")
-    if len(unique_types)==1:
-        col1, col2, col3, col4 = st.columns([5,4,3,4])
-        col1.title(f':blue[{unique_types[0]}]')
-        col2.title(f':blue[ยอดเดิม]')
-        col2.title(f':blue[{len(weapons_ins[unique_types[0]]) + len(weapons_outs[unique_types[0]])} กระบอก]')
-        col3.title(f':red[เบิก]')
-        col3.title(f':red[{len(weapons_outs[unique_types[0]])} กระบอก]')
-        col4.title(f'คงเหลือ')
-        col4.title(f'{len(weapons_ins[unique_types[0]])} กระบอก')
-
-    else:
-        for t in unique_types:
-
+        st.markdown("""---""")
+        if len(unique_types)==1:
             col1, col2, col3, col4 = st.columns([5,4,3,4])
-            col1.title(f':blue[{t}]')
-            col2.title(f':blue[ยอดเดิม {len(weapons_ins[t]) + len(weapons_outs[t])}]')
-            col3.title(f':red[เบิก {len(weapons_outs[t])}]')
-            col4.title(f'คงเหลือ {len(weapons_ins[t])}')
-
-    st.markdown("""---""")
-
-    # current weapon person id
-    col11, col22 = st.columns(2)
-    with col11:
-        st.subheader(':green[อาวุธ]')
-        if st.session_state.current_weapon:
-            st.title(f":red[{st.session_state.current_weapon['weapon_id']}]")
-            weapon_respon_id = st.session_state.current_weapon['person_respon_id']
-            try:
-                weapon_respon_name = df_person[df_person['person_id']==weapon_respon_id].iloc[0]['name']
-            except:
-                weapon_respon_name = 'ไม่ปรากฎชื่อผู้รับผิดชอบ'
-            st.write(f"{weapon_respon_name} ({weapon_respon_id})")
+            col1.title(f':blue[{unique_types[0]}]')
+            col2.title(f':blue[ยอดเดิม]')
+            col2.title(f':blue[{len(weapons_ins[unique_types[0]]) + len(weapons_outs[unique_types[0]])} กระบอก]')
+            col3.title(f':red[เบิก]')
+            col3.title(f':red[{len(weapons_outs[unique_types[0]])} กระบอก]')
+            col4.title(f'คงเหลือ')
+            col4.title(f'{len(weapons_ins[unique_types[0]])} กระบอก')
 
         else:
-            st.write('--')
-    with col22:
-        st.subheader(':green[ผู้เบิก]')
-        if st.session_state.current_person:
-            st.title(f":red[{st.session_state.current_person['name']}]")
-    
-        else:
-            st.write('--')
+            for t in unique_types:
 
-    st.markdown("""---""")
+                col1, col2, col3, col4 = st.columns([5,4,3,4])
+                col1.title(f':blue[{t}]')
+                col2.title(f':blue[ยอดเดิม {len(weapons_ins[t]) + len(weapons_outs[t])}]')
+                col3.title(f':red[เบิก {len(weapons_outs[t])}]')
+                col4.title(f'คงเหลือ {len(weapons_ins[t])}')
 
-    #show current status text
-    sta = 'โปรดสแกนอาวุธ และบัตรประจำตัว'
-    if st.session_state.current_weapon and st.session_state.current_person:
-        if weapon_respon_id == st.session_state.current_person['person_id'] or not check_match:
-            sta = 'บันทึกสำเร็จ!!'
-        else:
-            sta = 'ชื่อผู้เบิกไม่ตรง!'
-    elif st.session_state.current_weapon:
-        sta = 'โปรดสแกนบัตรประจำตัว'
-    elif st.session_state.current_person:
-        sta = 'โปรดสแกนอาวุธ'
+        st.markdown("""---""")
 
-    example('#ff6320','#eaff2f','#000000',sta)
+        # current weapon person id
+        col11, col22 = st.columns(2)
+        with col11:
+            st.subheader(':green[อาวุธ]')
+            if st.session_state.current_weapon:
+                st.title(f":red[{st.session_state.current_weapon['weapon_id']}]")
+                weapon_respon_id = st.session_state.current_weapon['person_respon_id']
+                try:
+                    weapon_respon_name = df_person[df_person['person_id']==weapon_respon_id].iloc[0]['name']
+                except:
+                    weapon_respon_name = 'ไม่ปรากฎชื่อผู้รับผิดชอบ'
+                st.write(f"{weapon_respon_name} ({weapon_respon_id})")
 
-    # complete state
-    if st.session_state.current_weapon and st.session_state.current_person:
-        if weapon_respon_id == st.session_state.current_person['person_id'] or not check_match:
-            isin = toggle_instock(st.session_state.current_weapon['weapon_barcode'])
-            if isin == 'True':
-                action = 'in'
             else:
-                action = 'out'
+                st.write('--')
+        with col22:
+            st.subheader(':green[ผู้เบิก]')
+            if st.session_state.current_person:
+                st.title(f":red[{st.session_state.current_person['name']}]")
+        
+            else:
+                st.write('--')
 
-            #save data to csv
-            data = {
-                'weapon_barcode' : st.session_state.current_weapon['weapon_barcode'],
-                'weapon_id' : st.session_state.current_weapon['weapon_id'],
-                'weapon_type' : st.session_state.current_weapon['type'],
-                'weapon_respon_name' : weapon_respon_name,
-                'weapon_respon_id' : weapon_respon_id,
-                'person_id' : st.session_state.current_person['person_id'],
-                'person_barcode' : st.session_state.current_person['person_barcode'],
-                'person_name' : st.session_state.current_person['name'],
-                'timestamp' : datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
-                'action' : action
-            }
+        st.markdown("""---""")
 
-            file_path = HISTORY_DATA_PATH
-            file_exists = os.path.isfile(file_path)
-            with open(file_path, mode='a', newline='') as file:
-                writer = csv.writer(file)
-                if not file_exists:
-                    writer.writerow(data.keys())  # Write the header row
-                writer.writerow(data.values())
+        #show current status text
+        sta = 'โปรดสแกนอาวุธ และบัตรประจำตัว'
+        if st.session_state.current_weapon and st.session_state.current_person:
+            if weapon_respon_id == st.session_state.current_person['person_id'] or not check_match:
+                sta = 'บันทึกสำเร็จ!!'
+            else:
+                sta = 'ชื่อผู้เบิกไม่ตรง!'
+        elif st.session_state.current_weapon:
+            sta = 'โปรดสแกนบัตรประจำตัว'
+        elif st.session_state.current_person:
+            sta = 'โปรดสแกนอาวุธ'
 
-            # if st.button("Foo"):
-            st.session_state.current_weapon = ''
-            st.session_state.current_person = ''
-            st.session_state.history_current_weapon_barcode = ''
-            st.session_state.input_text = ''
+        example('#ff6320','#eaff2f','#000000',sta)
 
-            #capture image
-            cap = cv2.VideoCapture(0)
-            if not cap.isOpened():
-                print("Error: Could not open camera.")
-                exit()
-            ret, frame = cap.read()
-            image_path = None
-            if ret:
-                directory = IMAGES_HISTORY_PATH
-                if not os.path.exists(directory):
-                    os.makedirs(directory)
-                image_path = f"{directory}/{data['timestamp']}.jpg"
-                cv2.imwrite(image_path, frame)
-            cap.release()
+        # complete state
+        if st.session_state.current_weapon and st.session_state.current_person:
+            if weapon_respon_id == st.session_state.current_person['person_id'] or not check_match:
+                isin = toggle_instock(st.session_state.current_weapon['weapon_barcode'])
+                if isin == 'True':
+                    action = 'in'
+                else:
+                    action = 'out'
 
-            #line noti
-            # if is_online():
-            try:
-                for line_token in LINE_TOKENS:
-                    message = f"\nหมายเลขปืน: {data['weapon_id']}\n"
-                    message += f"ชนิด: {data['weapon_type']}\n"
-                    message += f"ผู้รับผิดชอบปืน: {data['weapon_respon_name']}\n"
-                    message += f"ผู้เบิก : {data['person_name']}\n"
-                    # line_noti(line_token,message,image_path)
-                    thread1 = threading.Thread(target=line_noti, args=(line_token,message,image_path))
-                    thread1.start()
-            except:
-                pass
-                
-            #voice
-            # play_voice(action)
-            thread2 = threading.Thread(target=play_voice, args=(action,))
-            thread2.start()
+                #save data to csv
+                data = {
+                    'weapon_barcode' : st.session_state.current_weapon['weapon_barcode'],
+                    'weapon_id' : st.session_state.current_weapon['weapon_id'],
+                    'weapon_type' : st.session_state.current_weapon['type'],
+                    'weapon_respon_name' : weapon_respon_name,
+                    'weapon_respon_id' : weapon_respon_id,
+                    'person_id' : st.session_state.current_person['person_id'],
+                    'person_barcode' : st.session_state.current_person['person_barcode'],
+                    'person_name' : st.session_state.current_person['name'],
+                    'timestamp' : datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
+                    'action' : action
+                }
 
-            time.sleep(0.2)
-            st.rerun()
+                file_path = HISTORY_DATA_PATH
+                file_exists = os.path.isfile(file_path)
+                with open(file_path, mode='a', newline='') as file:
+                    writer = csv.writer(file)
+                    if not file_exists:
+                        writer.writerow(data.keys())  # Write the header row
+                    writer.writerow(data.values())
 
-        else:
-            #voice
-            # play_voice(action)
-            action = 'notmatch'
-            thread2 = threading.Thread(target=play_voice, args=(action,))
-            thread2.start()
+                # if st.button("Foo"):
+                st.session_state.current_weapon = ''
+                st.session_state.current_person = ''
+                st.session_state.history_current_weapon_barcode = ''
+                st.session_state.input_text = ''
 
-            st.session_state.current_weapon = ''
-            st.session_state.current_person = ''
-            st.session_state.history_current_weapon_barcode = ''
-            st.session_state.input_text = ''
+                #capture image
+                cap = cv2.VideoCapture(0)
+                if not cap.isOpened():
+                    print("Error: Could not open camera.")
+                    exit()
+                ret, frame = cap.read()
+                image_path = None
+                if ret:
+                    directory = IMAGES_HISTORY_PATH
+                    if not os.path.exists(directory):
+                        os.makedirs(directory)
+                    image_path = f"{directory}/{data['timestamp']}.jpg"
+                    cv2.imwrite(image_path, frame)
+                cap.release()
 
-            time.sleep(0.2)
-            st.rerun()
+                #line noti
+                # if is_online():
+                try:
+                    for line_token in LINE_TOKENS:
+                        message = f"\nหมายเลขปืน: {data['weapon_id']}\n"
+                        message += f"ชนิด: {data['weapon_type']}\n"
+                        message += f"ผู้รับผิดชอบปืน: {data['weapon_respon_name']}\n"
+                        message += f"ผู้เบิก : {data['person_name']}\n"
+                        # line_noti(line_token,message,image_path)
+                        thread1 = threading.Thread(target=line_noti, args=(line_token,message,image_path))
+                        thread1.start()
+                except:
+                    pass
+                    
+                #voice
+                # play_voice(action)
+                thread2 = threading.Thread(target=play_voice, args=(action,))
+                thread2.start()
+
+                time.sleep(0.2)
+                st.rerun()
+
+            else:
+                #voice
+                # play_voice(action)
+                action = 'notmatch'
+                thread2 = threading.Thread(target=play_voice, args=(action,))
+                thread2.start()
+
+                st.session_state.current_weapon = ''
+                st.session_state.current_person = ''
+                st.session_state.history_current_weapon_barcode = ''
+                st.session_state.input_text = ''
+
+                time.sleep(0.2)
+                st.rerun()
 
 
 
 
 
-    
+        
 
 
