@@ -12,3 +12,4 @@ LOGO_PATH: data/crma_logo.png
 PERSON_DATA_PATH: data/person_data.csv
 UNIT_NAME: พัน.๒ รร.จปร.
 WEAPON_DATA_PATH: data/weapon_data.csv
+GOOGLE_SHEET_URL: https://script.google.com/macros/s/AKfycbytyWzAyEr5SGa6I8qqUgErLiFW6bMQcSloBNy-TgpboYmRuG5ToksfmQ7dsx4uHVqk4w/exec

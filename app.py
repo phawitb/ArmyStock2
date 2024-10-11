@@ -7,6 +7,7 @@ import cv2
 import pygame
 from utils import generate_link_qr,gen_wifi_qr,set_hotspot,get_wifi_interface,get_ip,list_wifi_networks,read_config_yaml,img_to_base64
 import requests
+import threading
 
 st.set_page_config(layout="wide", initial_sidebar_state="collapsed")
 with open( "style.css" ) as css:
@@ -22,6 +23,8 @@ st.markdown("""
                 }
         </style>
         """, unsafe_allow_html=True)
+
+check_match = True
 
 config = read_config_yaml('config.yaml')
 BARCODE_HISTORY = config['BARCODE_HISTORY']
@@ -47,6 +50,17 @@ if "current_weapon" not in st.session_state:
 if "current_person" not in st.session_state:
     st.session_state.current_person = ""
 
+def play_voice(action):
+    pygame.mixer.init()
+    if action == 'in':
+        pygame.mixer.music.load("data/voices/in.mp3")
+    elif action == 'out':
+        pygame.mixer.music.load("data/voices/out.mp3")
+    elif action == 'notmatch':
+        pygame.mixer.music.load("data/voices/notmatch.mp3")
+    pygame.mixer.music.play()
+    while pygame.mixer.music.get_busy():
+        pygame.time.Clock().tick(10)   
 
 def is_online():
     try:
@@ -272,7 +286,7 @@ elif input_text == BARCODE_RESET or input_text == 'r':
     st.title('reset complete!!')
     
 # force hotspot
-elif input_text == BARCODE_HOTSPOT or input_text == 'h':
+elif input_text == BARCODE_HOTSPOT or input_text == 'shotspot':
     st.title('Setting & History')
 
     #save current wifi list
@@ -404,7 +418,10 @@ else:
     #show current status text
     sta = 'โปรดสแกนอาวุธ และบัตรประจำตัว'
     if st.session_state.current_weapon and st.session_state.current_person:
-        sta = 'บันทึกสำเร็จ!!'
+        if weapon_respon_id == st.session_state.current_person['person_id'] or not check_match:
+            sta = 'บันทึกสำเร็จ!!'
+        else:
+            sta = 'ชื่อผู้เบิกไม่ตรง!'
     elif st.session_state.current_weapon:
         sta = 'โปรดสแกนบัตรประจำตัว'
     elif st.session_state.current_person:
@@ -414,79 +431,95 @@ else:
 
     # complete state
     if st.session_state.current_weapon and st.session_state.current_person:
-        isin = toggle_instock(st.session_state.current_weapon['weapon_barcode'])
-        if isin == 'True':
-            action = 'in'
+        if weapon_respon_id == st.session_state.current_person['person_id'] or not check_match:
+            isin = toggle_instock(st.session_state.current_weapon['weapon_barcode'])
+            if isin == 'True':
+                action = 'in'
+            else:
+                action = 'out'
+
+            #save data to csv
+            data = {
+                'weapon_barcode' : st.session_state.current_weapon['weapon_barcode'],
+                'weapon_id' : st.session_state.current_weapon['weapon_id'],
+                'weapon_type' : st.session_state.current_weapon['type'],
+                'weapon_respon_name' : weapon_respon_name,
+                'weapon_respon_id' : weapon_respon_id,
+                'person_id' : st.session_state.current_person['person_id'],
+                'person_barcode' : st.session_state.current_person['person_barcode'],
+                'person_name' : st.session_state.current_person['name'],
+                'timestamp' : datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
+                'action' : action
+            }
+
+            file_path = HISTORY_DATA_PATH
+            file_exists = os.path.isfile(file_path)
+            with open(file_path, mode='a', newline='') as file:
+                writer = csv.writer(file)
+                if not file_exists:
+                    writer.writerow(data.keys())  # Write the header row
+                writer.writerow(data.values())
+
+            # if st.button("Foo"):
+            st.session_state.current_weapon = ''
+            st.session_state.current_person = ''
+            st.session_state.history_current_weapon_barcode = ''
+            st.session_state.input_text = ''
+
+            #capture image
+            cap = cv2.VideoCapture(0)
+            if not cap.isOpened():
+                print("Error: Could not open camera.")
+                exit()
+            ret, frame = cap.read()
+            image_path = None
+            if ret:
+                directory = 'data/images'
+                if not os.path.exists(directory):
+                    os.makedirs(directory)
+                image_path = f"{directory}/{data['timestamp']}.jpg"
+                cv2.imwrite(image_path, frame)
+            cap.release()
+
+            #line noti
+            # if is_online():
+            try:
+                for line_token in LINE_TOKENS:
+                    message = f"\nหมายเลขปืน: {data['weapon_id']}\n"
+                    message += f"ชนิด: {data['weapon_type']}\n"
+                    message += f"ผู้รับผิดชอบปืน: {data['weapon_respon_name']}\n"
+                    message += f"ผู้เบิก : {data['person_name']}\n"
+                    # line_noti(line_token,message,image_path)
+                    thread1 = threading.Thread(target=line_noti, args=(line_token,message,image_path))
+                    thread1.start()
+            except:
+                pass
+                
+            #voice
+            # play_voice(action)
+            thread2 = threading.Thread(target=play_voice, args=(action,))
+            thread2.start()
+
+            st.rerun()
+
         else:
-            action = 'out'
+            #voice
+            # play_voice(action)
+            action = 'notmatch'
+            thread2 = threading.Thread(target=play_voice, args=(action,))
+            thread2.start()
 
-        #save data to csv
-        data = {
-            'weapon_barcode' : st.session_state.current_weapon['weapon_barcode'],
-            'weapon_id' : st.session_state.current_weapon['weapon_id'],
-            'weapon_type' : st.session_state.current_weapon['type'],
-            'weapon_respon_name' : weapon_respon_name,
-            'weapon_respon_id' : weapon_respon_id,
-            'person_id' : st.session_state.current_person['person_id'],
-            'person_barcode' : st.session_state.current_person['person_barcode'],
-            'person_name' : st.session_state.current_person['name'],
-            'timestamp' : datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
-            'action' : action
-        }
+            st.session_state.current_weapon = ''
+            st.session_state.current_person = ''
+            st.session_state.history_current_weapon_barcode = ''
+            st.session_state.input_text = ''
 
-        file_path = HISTORY_DATA_PATH
-        file_exists = os.path.isfile(file_path)
-        with open(file_path, mode='a', newline='') as file:
-            writer = csv.writer(file)
-            if not file_exists:
-                writer.writerow(data.keys())  # Write the header row
-            writer.writerow(data.values())
-
-        # if st.button("Foo"):
-        st.session_state.current_weapon = ''
-        st.session_state.current_person = ''
-        st.session_state.history_current_weapon_barcode = ''
-        st.session_state.input_text = ''
-
-        #capture image
-        cap = cv2.VideoCapture(0)
-        if not cap.isOpened():
-            print("Error: Could not open camera.")
-            exit()
-        ret, frame = cap.read()
-        image_path = None
-        if ret:
-            directory = 'data/images'
-            if not os.path.exists(directory):
-                os.makedirs(directory)
-            image_path = f"{directory}/{data['timestamp']}.jpg"
-            cv2.imwrite(image_path, frame)
-        cap.release()
-
-        #line noti
-        if is_online():
-            for line_token in LINE_TOKENS:
-                message = f"\nหมายเลขปืน: {data['weapon_id']}\n"
-                message += f"ชนิด: {data['weapon_type']}\n"
-                message += f"ผู้รับผิดชอบปืน: {data['weapon_respon_name']}\n"
-                message += f"ผู้เบิก : {data['person_name']}\n"
-                line_noti(line_token,message,image_path)
-            
-
-        #voice
-        pygame.mixer.init()
-        if action == 'in':
-            pygame.mixer.music.load("data/voices/in.mp3")
-        else:
-            pygame.mixer.music.load("data/voices/out.mp3")
-        pygame.mixer.music.play()
-        while pygame.mixer.music.get_busy():
-            pygame.time.Clock().tick(10)              
-
-        st.rerun()
+            st.rerun()
 
 
 
 
+
+    
 
 
