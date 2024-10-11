@@ -111,6 +111,7 @@ void onLongPressButton3() {
 
 // Function for simultaneous long press on both buttons
 void onLongPressBothButtons() {
-  Keyboard.print("h\n");
+  Keyboard.print("hotspot\n");
+  delay(3000);
   bothLongPressHandled = true; // Set the flag to prevent multiple triggers
 }
