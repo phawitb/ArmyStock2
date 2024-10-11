@@ -24,8 +24,6 @@ st.markdown("""
         </style>
         """, unsafe_allow_html=True)
 
-check_match = True
-
 config = read_config_yaml('config.yaml')
 BARCODE_HISTORY = config['BARCODE_HISTORY']
 BARCODE_STATUS = config['BARCODE_STATUS']
@@ -38,6 +36,7 @@ PERSON_DATA_PATH = config['PERSON_DATA_PATH']
 HISTORY_DATA_PATH = config['HISTORY_DATA_PATH']
 UNIT_NAME = config['UNIT_NAME']
 LOGO_PATH = config['LOGO_PATH']
+check_match = config['CHECK_MATCH']
 LINE_TOKENS = []
 for i in range(1,4):
     if config[f'LINE_TOKEN{i}']:
