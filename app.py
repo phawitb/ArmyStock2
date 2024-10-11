@@ -29,6 +29,7 @@ BARCODE_STATUS = config['BARCODE_STATUS']
 BARCODE_RESET = config['BARCODE_RESET']
 BARCODE_CLEAR = config['BARCODE_CLEAR']
 BARCODE_SETTING = config['BARCODE_SETTING']
+BARCODE_HOTSPOT = config['BARCODE_HOTSPOT']
 WEAPON_DATA_PATH = config['WEAPON_DATA_PATH']
 PERSON_DATA_PATH = config['PERSON_DATA_PATH']
 HISTORY_DATA_PATH = config['HISTORY_DATA_PATH']
@@ -269,16 +270,46 @@ elif input_text == BARCODE_RESET or input_text == 'r':
     df_weapon['instock'] = 'True'
     df_weapon.to_csv(WEAPON_DATA_PATH, index=False)
     st.title('reset complete!!')
-
-# setting
-elif input_text == BARCODE_SETTING or input_text == 's':
+    
+# force hotspot
+elif input_text == BARCODE_HOTSPOT or input_text == 'h':
     st.title('Setting & History')
-    wifi_networks,active_ssid = list_wifi_networks() 
 
+    #save current wifi list
+    wifi_networks,active_ssid = list_wifi_networks() 
     with open('wifi_list.txt', 'w') as file:
         for item in wifi_networks:
             file.write(f"{item}\n")
 
+    set_hotspot("MyHotspot", "abcd1234")
+    gen_wifi_qr("MyHotspot", "abcd1234")
+    interface_name = get_wifi_interface()
+    current_ip = get_ip(interface_name)
+
+    cols = st.columns(2)
+    #visualize 
+    # if active_ssid == "MyHotspot" or not active_ssid:
+    cols[0].subheader('STEP1 : Connect to MyHotspot')
+    cols[0].write('ssid: MyHotspot')
+    cols[0].write('password: abcd1234')
+    cols[0].image('qrcode_wifi.png',caption="qrcode_wifi")
+    url = f"http://{current_ip}:8509/setting"
+    generate_link_qr(url)
+    cols[1].subheader(f'STEP2 : Connect to {url}')
+    cols[1].image('qrcode_link.png')
+
+
+# setting
+elif input_text == BARCODE_SETTING or input_text == 's':
+    st.title('Setting & History')
+
+    #save current wifi list
+    wifi_networks,active_ssid = list_wifi_networks() 
+    with open('wifi_list.txt', 'w') as file:
+        for item in wifi_networks:
+            file.write(f"{item}\n")
+
+    #find current ip
     interface_name = get_wifi_interface()
     current_ip = get_ip(interface_name)
 
@@ -291,6 +322,7 @@ elif input_text == BARCODE_SETTING or input_text == 's':
 
     cols = st.columns(2)
 
+    #visualize 
     if active_ssid == "MyHotspot" or not active_ssid:
         cols[0].subheader('STEP1 : Connect to MyHotspot')
         cols[0].write('ssid: MyHotspot')
