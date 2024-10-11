@@ -1,16 +1,16 @@
-CHECK_MATCH: True
-UNIT_NAME: พัน.๒ รร.จปร.
-GOOGLE_SHEET_URL: https://script.google.com/macros/s/AKfycbytyWzAyEr5SGa6I8qqUgErLiFW6bMQcSloBNy-TgpboYmRuG5ToksfmQ7dsx4uHVqk4w/exec
-LOGO_PATH: data/crma_logo.png
 BARCODE_CLEAR: c
 BARCODE_HISTORY: '1'
+BARCODE_HOTSPOT: h
 BARCODE_RESET: r
 BARCODE_SETTING: s
 BARCODE_STATUS: '2'
-BARCODE_HOTSPOT: 'h'
+CHECK_MATCH: false
+GOOGLE_SHEET_URL: https://script.google.com/macros/s/AKfycbytyWzAyEr5SGa6I8qqUgErLiFW6bMQcSloBNy-TgpboYmRuG5ToksfmQ7dsx4uHVqk4w/exec
 HISTORY_DATA_PATH: data/data_history.csv
 LINE_TOKEN1: hSZKWJiXYZXrjUOAw1vPn7C6hjJBq8Ai21ImGZes1Pb
 LINE_TOKEN2: ''
 LINE_TOKEN3: ''
+LOGO_PATH: data/crma_logo.png
 PERSON_DATA_PATH: data/person_data.csv
+UNIT_NAME: พัน.๒ รร.จปร.
 WEAPON_DATA_PATH: data/weapon_data.csv
