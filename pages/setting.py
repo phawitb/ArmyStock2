@@ -99,6 +99,10 @@ with open('config.yaml', 'r', encoding='utf-8') as file:
     config = yaml.safe_load(file)
 
 
+setting_match = st.radio(
+    "ตั้งค่าชื่อผู้รับผิดชอบกับผู้เบิก",
+    ["ต้องตรงกัน", "ไม่จำเป็นต้องต้องกัน"],
+)
 unit_name = st.text_input('unit name',config['UNIT_NAME'])
 line_token1 = st.text_input('line token1',config['LINE_TOKEN1'])
 line_token2 = st.text_input('line token2',config['LINE_TOKEN2'])
@@ -112,10 +116,27 @@ if st.button('update'):
     config['LINE_TOKEN2'] = line_token2
     config['LINE_TOKEN3'] = line_token3
     config['GOOGLE_SHEET_URL'] = google_sheet_url
-    
+
+    if setting_match == "ต้องตรงกัน":
+        config['CHECK_MATCH'] = True
+    else:
+        config['CHECK_MATCH'] = False
+
     with open('config.yaml', 'w', encoding='utf-8') as file:
         yaml.safe_dump(config, file, allow_unicode=True)
     st.write("updated successfully!")
+
+
+
+# setting_match = st.radio(
+#     "ตั้งค่าชื่อผู้รับผิดชอบกับผู้เบิก",
+#     ["ต้องตรงกัน", "ไม่จำเป็นต้องต้องกัน"],
+# )
+
+# if setting_match == "ต้องตรงกัน":
+#     st.write("You selected comedy.")
+# else:
+#     st.write("You didn't select comedy.")
 
 
 
