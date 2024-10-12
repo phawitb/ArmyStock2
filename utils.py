@@ -42,7 +42,7 @@ def gen_wifi_qr(ssid,password):
     img = qr.make_image(fill='black', back_color='white')
     img.save("qrcode_wifi.png")
 
-def set_hotspot(ssid, password):
+def set_hotspot(ssid, password, interfaces):
     try:
         # Turn on Wi-Fi (just in case it's off)
         subprocess.run(["nmcli", "radio", "wifi", "on"], check=True)
@@ -50,7 +50,7 @@ def set_hotspot(ssid, password):
         # Set up the hotspot
         subprocess.run([
             "nmcli", "device", "wifi", "hotspot", 
-            "ifname", "wlp4s0",  # Replace 'wlan0' with your Wi-Fi interface name
+            "ifname", interfaces,  # Replace 'wlan0' wlp4s0 with your Wi-Fi interface name
             "con-name", "MyHotspot", 
             "ssid", ssid, 
             "band", "bg",  # Use 'bg' for 2.4GHz band, 'a' for 5GHz if supported
@@ -72,7 +72,11 @@ def get_wifi_interface():
             return f"Error executing ifconfig: {result.stderr}"
 
         # Regex to find the wireless interface (interface name starts with 'wl')
+        #ubuntu pc
         interfaces = re.findall(r'(^wlp\S+): flags', result.stdout, re.MULTILINE)
+        if not interfaces:
+            # rasberry pi
+            interfaces = re.findall(r'(^wlan0): flags', result.stdout, re.MULTILINE)
         
         if interfaces:
             return interfaces[0]
@@ -109,6 +113,7 @@ def list_wifi_networks():
     current_connection = subprocess.run(['nmcli', '-t', '-f', 'NAME', 'connection', 'show', '--active'], capture_output=True, text=True)
     
     if current_connection.returncode == 0:
+        #for ubuntupc
         active_ssid = current_connection.stdout.strip()
         active_ssid = active_ssid.split("\n")
 
@@ -116,6 +121,10 @@ def list_wifi_networks():
             active_ssid = None
         elif len(active_ssid) == 3:
             active_ssid = active_ssid[0]
+
+        #for rasberry pi
+        if not active_ssid:
+            active_ssid = current_connection.stdout.strip()
 
     return wifi_networks,active_ssid
 
@@ -136,4 +145,4 @@ def connect_to_wifi(ssid, password):
         return f"An error occurred: {str(e)}"
     
 
-connect_to_wifi("Botan_2.4GHz", "Abcd1234")
+# connect_to_wifi("Botan_2.4GHz", "Abcd1234")

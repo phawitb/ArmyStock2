@@ -345,7 +345,7 @@ elif input_text == BARCODE_SETTING or input_text == 's':
 
         st.subheader(f'current_ip {current_ip}')
         if not current_ip:
-            set_hotspot("MyHotspot", "abcd1234")
+            set_hotspot("MyHotspot", "abcd1234",interface_name)
             gen_wifi_qr("MyHotspot", "abcd1234")
 
             current_ip = get_ip(interface_name)
