@@ -484,19 +484,22 @@ else:
                 st.session_state.input_text = ''
 
                 #capture image
-                cap = cv2.VideoCapture(0)
-                if not cap.isOpened():
-                    print("Error: Could not open camera.")
-                    exit()
-                ret, frame = cap.read()
-                image_path = None
-                if ret:
-                    directory = IMAGES_HISTORY_PATH
-                    if not os.path.exists(directory):
-                        os.makedirs(directory)
-                    image_path = f"{directory}/{data['timestamp']}.jpg"
-                    cv2.imwrite(image_path, frame)
-                cap.release()
+                try:
+                    cap = cv2.VideoCapture(0)
+                    if not cap.isOpened():
+                        print("Error: Could not open camera.")
+                        exit()
+                    ret, frame = cap.read()
+                    image_path = None
+                    if ret:
+                        directory = IMAGES_HISTORY_PATH
+                        if not os.path.exists(directory):
+                            os.makedirs(directory)
+                        image_path = f"{directory}/{data['timestamp']}.jpg"
+                        cv2.imwrite(image_path, frame)
+                    cap.release()
+                except:
+                    pass
 
                 #line noti
                 # if is_online():
@@ -540,5 +543,3 @@ else:
 
 
         
-
-
