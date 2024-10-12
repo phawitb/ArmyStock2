@@ -309,9 +309,9 @@ elif input_text == BARCODE_HOTSPOT or input_text == 'shotspot':
             for item in wifi_networks:
                 file.write(f"{item}\n")
 
-        set_hotspot("MyHotspot", "abcd1234")
-        gen_wifi_qr("MyHotspot", "abcd1234")
         interface_name = get_wifi_interface()
+        set_hotspot("MyHotspot", "abcd1234",interface_name)
+        gen_wifi_qr("MyHotspot", "abcd1234")
         current_ip = get_ip(interface_name)
 
         cols = st.columns(2)
