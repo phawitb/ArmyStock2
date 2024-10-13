@@ -22,6 +22,13 @@ st.markdown("""
                     padding-left: 5rem;
                     padding-right: 5rem;
                 }
+                .reportview-container {
+		    margin-top: -2em;
+		}
+		#MainMenu {visibility: hidden;}
+		.stDeployButton {display:none;}
+		footer {visibility: hidden;}
+		#stDecoration {display:none;}
         </style>
         """, unsafe_allow_html=True)
 
