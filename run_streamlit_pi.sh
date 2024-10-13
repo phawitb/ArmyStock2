@@ -24,5 +24,6 @@ sleep 3
 python3 -m streamlit run app.py --server.headless true --server.port 8509 &
 
 sleep 5
-
-chromium-browser --start-fullscreen http://localhost:8509
+unclutter -idle 0.5 & chromium-browser --start-fullscreen --disable-session-crashed-bubble --disable-infobars --kiosk --incogito http://localhost:8509
+#chromium-browser --start-fullscreen --disable-session-crashed-bubble --disable-infobars http://localhost:8509
+#chromium-browser --start-fullscreen http://localhost:8509
