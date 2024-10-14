@@ -113,14 +113,16 @@ line_token1 = st.text_input('line token1',config['LINE_TOKEN1'])
 line_token2 = st.text_input('line token2',config['LINE_TOKEN2'])
 line_token3 = st.text_input('line token3',config['LINE_TOKEN3'])
 
-google_sheet_url = st.text_input('google sheet url',config['GOOGLE_SHEET_URL'])
+GOOGLE_SHEET_API = st.text_input('google sheet api',config['GOOGLE_SHEET_API'])
+GOOGLE_SHEET_URL = st.text_input('google sheet url',config['GOOGLE_SHEET_URL'])
 
 if st.button('update'):
     config['UNIT_NAME'] = unit_name
     config['LINE_TOKEN1'] = line_token1
     config['LINE_TOKEN2'] = line_token2
     config['LINE_TOKEN3'] = line_token3
-    config['GOOGLE_SHEET_URL'] = google_sheet_url
+    config['GOOGLE_SHEET_API'] = GOOGLE_SHEET_API
+    config['GOOGLE_SHEET_URL'] = GOOGLE_SHEET_URL
 
     if setting_match == "ต้องตรงกัน":
         config['CHECK_MATCH'] = True

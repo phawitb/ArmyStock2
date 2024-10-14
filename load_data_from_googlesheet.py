@@ -82,7 +82,8 @@ config = read_config_yaml('config.yaml')
 WEAPON_DATA_PATH = config['WEAPON_DATA_PATH']
 PERSON_DATA_PATH = config['PERSON_DATA_PATH']
 
-url = 'https://script.google.com/macros/s/AKfycbytyWzAyEr5SGa6I8qqUgErLiFW6bMQcSloBNy-TgpboYmRuG5ToksfmQ7dsx4uHVqk4w/exec'
+# url = 'https://script.google.com/macros/s/AKfycbytyWzAyEr5SGa6I8qqUgErLiFW6bMQcSloBNy-TgpboYmRuG5ToksfmQ7dsx4uHVqk4w/exec'
+url = config['GOOGLE_SHEET_API']
 
 def fetch_data(action):
     
