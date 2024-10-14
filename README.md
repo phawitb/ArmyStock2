@@ -1,5 +1,4 @@
 # ArmyStock2
-### Setup
 ## Step1 : set up google sheet
 ```
 setup_tutorial :: https://www.youtube.com/watch?v=r817RLqmLac
