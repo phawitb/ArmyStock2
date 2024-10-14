@@ -81,7 +81,7 @@ copy run_streamlit.sh to outside ArmyStock2
 cd /home/phawit/Documents/
 chmod +x run_streamlit.sh
 ```
-### In Startup Applications
+## Step3 : In Startup Applications
 ```
 /home/phawit/Documents/run_streamlit.sh
 ```
