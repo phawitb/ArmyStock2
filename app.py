@@ -324,7 +324,7 @@ elif input_text == BARCODE_HOTSPOT or input_text == 'shotspot':
         gen_wifi_qr("MyHotspot", "abcd1234")
         current_ip = get_ip(interface_name)
 
-        cols = st.columns(2)
+        cols = st.columns(3)
         #visualize 
         # if active_ssid == "MyHotspot" or not active_ssid:
         cols[0].subheader('STEP1 : Connect to MyHotspot')
@@ -335,6 +335,11 @@ elif input_text == BARCODE_HOTSPOT or input_text == 'shotspot':
         generate_link_qr(url)
         cols[1].subheader(f'STEP2 : Connect to {url}')
         cols[1].image('qrcode_link.png')
+
+        cols[2].subheader(f'Sheet URL : {GOOGLE_SHEET_URL}')
+        generate_link_qr(GOOGLE_SHEET_URL, filename="qrcode_link_sheet.png")
+        # cols = st.columns(5)
+        cols[2].image("qrcode_link_sheet.png")
 
 
 # setting
@@ -360,7 +365,7 @@ elif input_text == BARCODE_SETTING or input_text == 's':
 
             current_ip = get_ip(interface_name)
 
-        cols = st.columns(2)
+        cols = st.columns(3)
 
         #visualize 
         if active_ssid == "MyHotspot" or not active_ssid:
@@ -378,10 +383,10 @@ elif input_text == BARCODE_SETTING or input_text == 's':
         cols[1].subheader(f'STEP2 : Connect to {url}')
         cols[1].image('qrcode_link.png')
 
-        st.subheader(f'Sheet URL : {GOOGLE_SHEET_URL}')
+        cols[2].subheader(f'Sheet URL : {GOOGLE_SHEET_URL}')
         generate_link_qr(GOOGLE_SHEET_URL, filename="qrcode_link_sheet.png")
-        cols = st.columns(5)
-        cols[0].image("qrcode_link_sheet.png")
+        # cols = st.columns(5)
+        cols[2].image("qrcode_link_sheet.png")
 
 # main
 else:
