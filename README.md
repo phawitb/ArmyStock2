@@ -68,8 +68,12 @@ function getAllPersonData() {
 ```
 ## Step2 : set up ubuntu environments
 ```
-#1 install chromium from ubuntu-store
+#0 install chromium from ubuntu-store
+#1 sudo api install git
 #2 sudo apt install chromium-browser
+#3 sudo api install unclutter
+
+** if can't use streamlit run app.py >> python3 -m streamlit run app.py
 ```
 ```
 cd /home/phawit/Documents
