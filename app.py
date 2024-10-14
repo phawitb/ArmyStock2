@@ -461,6 +461,17 @@ else:
 
         example('#ff6320','#eaff2f','#000000',sta)
 
+        cols = st.columns(5)
+        cols[0].markdown("""
+                    กดปุ่มสีแดง : เพื่อยกเลิกการแสกนที่ค้างอยู่\n
+                    กดปุ่มสีดำ : เพื่อเปลี่ยนเมนู ประวัติ สถานะ\n
+                    กดค้างสองปุ่มพร้อมกัน : เพื่อปล่อย hotspot
+                    """)
+        cols[1].markdown("""
+                    กดปุ่มสีแดงค้าง : เพื่อเคลียร์การเบิกอาวุธทั้งหมด\n
+                    กดปุ่มสีดำค้าง : เพื่อเข้าเมนูการตั้งค่า
+                    """)
+
         # complete state
         if st.session_state.current_weapon and st.session_state.current_person:
             if weapon_respon_id == st.session_state.current_person['person_id'] or not check_match:
