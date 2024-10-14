@@ -81,7 +81,7 @@ git https://github.com/phawitb/ArmyStock2.com](https://github.com/phawitb/ArmySt
 cd /home/phawit/Documents/ArmyStock2
 pip install -r equirements.txt
 
-copy run_streamlit.sh to outside ArmyStock2
+copy run_streamlit_pi.sh to outside ArmyStock2
 cd /home/phawit/Documents/
 chmod +x run_streamlit.sh
 ```
