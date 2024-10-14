@@ -1,41 +1,11 @@
 # ArmyStock2
-
-### 1.load data from sheet https://docs.google.com/spreadsheets/d/1qjwfbjsITCQXcdYV88soR3xk-NBUKpjGTuQ57IWG2Dc/edit?usp=sharing
-```
-python load_data_from_googlesheet.py
-```
-### 2.run app
-```
-streamlit run app.py
-```
-
-## Setup kiosk on Ubuntu
-### 
-```
-install chromium from ubuntu-store
-```
-```
-sudo apt install chromium-browser
-```
-```
-# edit config.yaml
-# edit and setup google sheet in load_data_from_googlesheet.py
-
-cd /home/phawit/Documents/ArmyStock
-pip install -r equirements.txt
-chmod +x run_streamlit.sh
-```
-### In Startup Applications
-```
-/home/phawit/Documents/ArmyStock/run_streamlit.sh
-```
-
-## in code.gs
+### Setup
+## Step1 : set up google sheet
 ```
 setup_tutorial :: https://www.youtube.com/watch?v=r817RLqmLac
-
 sheet url :: https://docs.google.com/spreadsheets/d/1qjwfbjsITCQXcdYV88soR3xk-NBUKpjGTuQ57IWG2Dc/edit?usp=sharing
-
+```
+```
 code.gs :: 
 function doGet(e) {
   var action = e.parameter.action;
@@ -92,6 +62,46 @@ function getAllPersonData() {
   var result = JSON.stringify(data);
   return ContentService.createTextOutput(result).setMimeType(ContentService.MimeType.JSON);
 }
+```
+```
+# copy google_sheet_url to config.yaml
+# copy google_sheet_api to config.yaml
+```
 
 
 ```
+
+### 1.load data from sheet https://docs.google.com/spreadsheets/d/1qjwfbjsITCQXcdYV88soR3xk-NBUKpjGTuQ57IWG2Dc/edit?usp=sharing
+```
+python load_data_from_googlesheet.py
+```
+### 2.run app
+```
+streamlit run app.py
+```
+
+## Setup kiosk on Ubuntu in Rasberry pi
+### 
+```
+install chromium from ubuntu-store
+```
+```
+sudo apt install chromium-browser
+```
+```
+# edit config.yaml
+
+copy run_streamlit.sh to outside ArmyStock2
+
+cd /home/phawit/Documents/ArmyStock2
+pip install -r equirements.txt
+
+cd /home/phawit/Documents/
+chmod +x run_streamlit.sh
+```
+### In Startup Applications
+```
+/home/phawit/Documents/run_streamlit.sh
+```
+
+## in code.gs
