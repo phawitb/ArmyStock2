@@ -1,3 +1,7 @@
+/*
+button red   >> 2,GND
+button black >> 3,GND
+*/
 #include <Keyboard.h>
 
 // Constants for buttons
