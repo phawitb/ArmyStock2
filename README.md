@@ -67,6 +67,26 @@ function getAllPersonData() {
 # copy google_sheet_url to config.yaml
 # copy google_sheet_api to config.yaml
 ```
+## Step2 : set up ubuntu environments
+```
+#1 install chromium from ubuntu-store
+#2 sudo apt install chromium-browser
+
+```
+```
+cd /home/phawit/Documents
+git https://github.com/phawitb/ArmyStock2.com](https://github.com/phawitb/ArmyStock2.git
+cd /home/phawit/Documents/ArmyStock2
+pip install -r equirements.txt
+
+copy run_streamlit.sh to outside ArmyStock2
+cd /home/phawit/Documents/
+chmod +x run_streamlit.sh
+```
+### In Startup Applications
+```
+/home/phawit/Documents/run_streamlit.sh
+```
 
 
 ```
