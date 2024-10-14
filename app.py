@@ -46,6 +46,8 @@ UNIT_NAME = config['UNIT_NAME']
 LOGO_PATH = config['LOGO_PATH']
 IMAGES_HISTORY_PATH = config['IMAGES_HISTORY_PATH']
 check_match = config['CHECK_MATCH']
+GOOGLE_SHEET_URL = config['GOOGLE_SHEET_URL']
+
 LINE_TOKENS = []
 for i in range(1,4):
     if config[f'LINE_TOKEN{i}']:
@@ -374,6 +376,11 @@ elif input_text == BARCODE_SETTING or input_text == 's':
         generate_link_qr(url)
         cols[1].subheader(f'STEP2 : Connect to {url}')
         cols[1].image('qrcode_link.png')
+
+        st.subheader(f'Sheet URL : {GOOGLE_SHEET_URL}')
+        generate_link_qr(GOOGLE_SHEET_URL, filename="qrcode_link_sheet.png")
+        cols = st.columns(5)
+        cols[0].image("qrcode_link_sheet.png")
 
 # main
 else:

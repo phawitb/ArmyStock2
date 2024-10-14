@@ -71,6 +71,13 @@ def read_config_yaml(file_path):
         config = yaml.safe_load(config_file)
     return config
 
+directory = "../data"
+if not os.path.exists(directory):
+    os.makedirs(directory)
+    print(f"Directory {directory} created.")
+else:
+    print(f"Directory {directory} already exists.")
+
 config = read_config_yaml('config.yaml')
 WEAPON_DATA_PATH = config['WEAPON_DATA_PATH']
 PERSON_DATA_PATH = config['PERSON_DATA_PATH']
@@ -93,16 +100,26 @@ def fetch_data(action):
         return None
 
 def update_weapon_data():
-    df_new_weapon = fetch_data('getAllWeaponData')
-    print('df_new_weapon',df_new_weapon)
+    df_online = fetch_data('getAllWeaponData')
 
-    if df_new_weapon is not None:
-        if os.path.exists(WEAPON_DATA_PATH):
-            df_new_weapon.to_csv(WEAPON_DATA_PATH, index=False)
-            print("weapon_data.csv updated successfully!")
-        else:
-            df_new_weapon.to_csv(WEAPON_DATA_PATH, index=False)
-            print("weapon_data.csv created successfully!")
+    if os.path.exists(WEAPON_DATA_PATH):
+      df_local = pd.read_csv(WEAPON_DATA_PATH)
+
+      df_updated = pd.merge(df_online, df_local[['weapon_barcode', 'instock']], on='weapon_barcode', how='left', suffixes=('_online', '_local'))
+      df_updated['instock'] = df_updated['instock_local'].combine_first(df_updated['instock_online'])
+      df_updated = df_updated.drop(columns=['instock_online', 'instock_local'])
+      
+      df_updated.to_csv(WEAPON_DATA_PATH, index=False)
+
+    else:
+      df_online.to_csv(WEAPON_DATA_PATH, index=False)
+    # if df_new_weapon is not None:
+    #     if os.path.exists(WEAPON_DATA_PATH):
+    #         df_new_weapon.to_csv(WEAPON_DATA_PATH, index=False)
+    #         print("weapon_data.csv updated successfully!")
+    #     else:
+    #         df_new_weapon.to_csv(WEAPON_DATA_PATH, index=False)
+    #         print("weapon_data.csv created successfully!")
 
 def update_person_data():
     df_new_person = fetch_data('getAllPersonData')
