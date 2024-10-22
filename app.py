@@ -5,10 +5,11 @@ import os
 from datetime import datetime
 import cv2
 import pygame
-from utils import generate_link_qr,gen_wifi_qr,set_hotspot,get_wifi_interface,get_ip,list_wifi_networks,read_config_yaml,img_to_base64
+from utils import generate_link_qr,gen_wifi_qr,set_hotspot,get_wifi_interface,get_ip,list_wifi_networks,read_config_yaml,img_to_base64,get_ngrok_url,is_online
 import requests
 import threading
 import time
+# import json
 
 st.set_page_config(layout="wide", initial_sidebar_state="collapsed")
 with open( "style.css" ) as css:
@@ -345,48 +346,60 @@ elif input_text == BARCODE_HOTSPOT or input_text == 'shotspot':
 # setting
 elif input_text == BARCODE_SETTING or input_text == 's':
     st.title('Setting & History')
-
+    
     with st.spinner('Wait for it...'):
+        ngrok_url = get_ngrok_url()
+        if ngrok_url and is_online():
+            generate_link_qr(ngrok_url)
+            cols = st.columns(2)
 
-        #save current wifi list
-        wifi_networks,active_ssid = list_wifi_networks() 
-        with open('wifi_list.txt', 'w') as file:
-            for item in wifi_networks:
-                file.write(f"{item}\n")
+            cols[0].subheader(f'STEP2 : Connect to {ngrok_url}')
+            cols[0].image('qrcode_link.png')
 
-        #find current ip
-        interface_name = get_wifi_interface()
-        current_ip = get_ip(interface_name)
-
-        st.subheader(f'current_ip {current_ip}')
-        if not current_ip:
-            set_hotspot("MyHotspot", "abcd1234",interface_name)
-            gen_wifi_qr("MyHotspot", "abcd1234")
-
-            current_ip = get_ip(interface_name)
-
-        cols = st.columns(3)
-
-        #visualize 
-        if active_ssid == "MyHotspot" or not active_ssid:
-            cols[0].subheader('STEP1 : Connect to MyHotspot')
-            cols[0].write('ssid: MyHotspot')
-            cols[0].write('password: abcd1234')
-        
-            cols[0].image('qrcode_wifi.png',caption="qrcode_wifi")
+            cols[1].subheader(f'Sheet URL : {GOOGLE_SHEET_URL}')
+            generate_link_qr(GOOGLE_SHEET_URL, filename="qrcode_link_sheet.png")
+            cols[1].image("qrcode_link_sheet.png")
 
         else:
-            cols[0].subheader(f'STEP1 : Connect to ssid: {active_ssid}')
+            #save current wifi list
+            wifi_networks,active_ssid = list_wifi_networks() 
+            with open('wifi_list.txt', 'w') as file:
+                for item in wifi_networks:
+                    file.write(f"{item}\n")
 
-        url = f"http://{current_ip}:8509/setting"
-        generate_link_qr(url)
-        cols[1].subheader(f'STEP2 : Connect to {url}')
-        cols[1].image('qrcode_link.png')
+            #find current ip
+            interface_name = get_wifi_interface()
+            current_ip = get_ip(interface_name)
 
-        cols[2].subheader(f'Sheet URL : {GOOGLE_SHEET_URL}')
-        generate_link_qr(GOOGLE_SHEET_URL, filename="qrcode_link_sheet.png")
-        # cols = st.columns(5)
-        cols[2].image("qrcode_link_sheet.png")
+            st.subheader(f'current_ip {current_ip}')
+            if not current_ip:
+                set_hotspot("MyHotspot", "abcd1234",interface_name)
+                gen_wifi_qr("MyHotspot", "abcd1234")
+
+                current_ip = get_ip(interface_name)
+
+            cols = st.columns(3)
+
+            #visualize 
+            if active_ssid == "MyHotspot" or not active_ssid:
+                cols[0].subheader('STEP1 : Connect to MyHotspot')
+                cols[0].write('ssid: MyHotspot')
+                cols[0].write('password: abcd1234')
+            
+                cols[0].image('qrcode_wifi.png',caption="qrcode_wifi")
+
+            else:
+                cols[0].subheader(f'STEP1 : Connect to ssid: {active_ssid}')
+
+            url = f"http://{current_ip}:8509/setting"
+            generate_link_qr(url)
+            cols[1].subheader(f'STEP2 : Connect to {url}')
+            cols[1].image('qrcode_link.png')
+
+            cols[2].subheader(f'Sheet URL : {GOOGLE_SHEET_URL}')
+            generate_link_qr(GOOGLE_SHEET_URL, filename="qrcode_link_sheet.png")
+            # cols = st.columns(5)
+            cols[2].image("qrcode_link_sheet.png")
 
 # main
 else:

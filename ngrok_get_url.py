@@ -3,17 +3,25 @@
 # ngrok http http://localhost:8509
 
 import requests
+import json
 
-# Replace with your local URL
-url = 'http://localhost:4040/api/tunnels'
+def get_url():
 
-try:
-    response = requests.get(url)
-    response.raise_for_status()  # Raises an error for HTTP errors
+    # Replace with your local URL
+    url = 'http://localhost:4040/api/tunnels'
 
-    data = response.text
-    print(data)
+    try:
+        response = requests.get(url)
+        response.raise_for_status()  # Raises an error for HTTP errors
+        data = response.text
+        d = json.loads(data)
 
+        url = d['tunnels'][0]['public_url']
 
-except requests.exceptions.RequestException as e:
-    print(f'Error fetching data: {e}')
+        return url
+
+    except requests.exceptions.RequestException as e:
+        print(f'Error fetching data: {e}')
+        return None
+
+print(get_url())

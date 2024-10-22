@@ -3,9 +3,42 @@ import re
 import qrcode
 import yaml
 import base64
-
+import json
+import requests
 # generate_link_qr,gen_wifi_qr,set_hotspot,get_wifi_interface,get_ip,list_wifi_networks,connect_to_wifi,read_config_yaml,img_to_base64
 
+def is_online():
+    url = "https://www.google.com"
+    try:
+        response = requests.get(url, timeout=5)
+        # Check if the status code indicates success (200-299)
+        if 200 <= response.status_code < 300:
+            return True
+        else:
+            return False
+    except requests.ConnectionError:
+        return False
+    except requests.Timeout:
+        return False
+    
+def get_ngrok_url():
+    # Replace with your local URL
+    url = 'http://localhost:4040/api/tunnels'
+
+    try:
+        response = requests.get(url)
+        response.raise_for_status()  # Raises an error for HTTP errors
+        data = response.text
+        d = json.loads(data)
+
+        url = d['tunnels'][0]['public_url']
+
+        return url
+
+    except: #requests.exceptions.RequestException as e:
+        #print(f'Error fetching data: {e}')
+        return None
+    
 def img_to_base64(image_path):
     with open(image_path, "rb") as image_file:
         encoded_string = base64.b64encode(image_file.read()).decode('utf-8')
