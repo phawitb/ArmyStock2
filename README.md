@@ -101,6 +101,7 @@ ngrok http http://localhost:8509
 ```
 ## Step4 : In Startup Applications
 ```
+# copy run_streamlit.sh to 
 /home/phawit/Documents/run_streamlit.sh
 ```
 
