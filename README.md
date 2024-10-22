@@ -85,7 +85,21 @@ copy run_streamlit_pi.sh to outside ArmyStock2
 cd /home/phawit/Documents/
 chmod +x run_streamlit.sh
 ```
-## Step3 : In Startup Applications
+## Step3 : Setup Ngrok
+```
+# https://dashboard.ngrok.com/get-started/setup/linux
+curl -sSL https://ngrok-agent.s3.amazonaws.com/ngrok.asc \
+	| sudo tee /etc/apt/trusted.gpg.d/ngrok.asc >/dev/null \
+	&& echo "deb https://ngrok-agent.s3.amazonaws.com buster main" \
+	| sudo tee /etc/apt/sources.list.d/ngrok.list \
+	&& sudo apt update \
+	&& sudo apt install ngrok
+ ```
+```
+ngrok config add-authtoken 2nLJwN5SqkrtH9bxLeirZByTgWR_6G3wNZZbWEepxGxtiUZZY
+ngrok http http://localhost:8509
+```
+## Step4 : In Startup Applications
 ```
 /home/phawit/Documents/run_streamlit.sh
 ```
