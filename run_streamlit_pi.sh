@@ -11,17 +11,19 @@ URL="8.8.8.8"  # Google Public DNS
 if ping -c 1 "$URL" &> /dev/null; then
     echo "online"
     rm -r ArmyStock2
+
     sleep 1
     git clone https://github.com/phawitb/ArmyStock2.git
-    sleep 3
-fi
 
-cd /home/phawit/Documents/ArmyStock2
-python3 load_data_from_googlesheet.py
+    sleep 3
+    cd /home/phawit/Documents/ArmyStock2
+    python3 load_data_from_googlesheet.py
+fi
 
 sleep 3
 
 python3 -m streamlit run app.py --server.headless true --server.port 8509 &
+ngrok http http://localhost:8509 &
 
 sleep 5
 unclutter -idle 0.5 & chromium-browser --start-fullscreen --disable-session-crashed-bubble --disable-infobars --kiosk --incogito http://localhost:8509
