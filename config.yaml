@@ -7,7 +7,7 @@ BARCODE_STATUS: '2'
 CHECK_MATCH: true
 GOOGLE_SHEET_API: https://script.google.com/macros/s/AKfycbytyWzAyEr5SGa6I8qqUgErLiFW6bMQcSloBNy-TgpboYmRuG5ToksfmQ7dsx4uHVqk4w/exec
 GOOGLE_SHEET_URL: https://docs.google.com/spreadsheets/d/1qjwfbjsITCQXcdYV88soR3xk-NBUKpjGTuQ57IWG2Dc/edit?usp=sharing
-GOOGLE_SHEET_ALL_URL: https://script.google.com/macros/s/AKfycbwCwmDCVZto2usXx4SR0nYvCPqaLRJWfTxXDEQmNFkIgFgyO1eOLvEsglYhGzbnSi3m/exec
+GOOGLE_SHEET_ALL_URL: https://script.google.com/macros/s/AKfycbzuT9-Ubg4hK999BVXVenxvnSMcUDtLhYUJO17gGHRCONrx12gOc5ovfrGLUh711Kyq/exec
 
 HISTORY_DATA_PATH: ../data/data_history.csv
 IMAGES_HISTORY_PATH: ../data/images/
