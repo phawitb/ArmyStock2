@@ -1,10 +1,108 @@
 # ArmyStock2
-## Step1 : set up google sheet
+## Step0 : setup google sheet All
 ```
 setup_tutorial :: https://www.youtube.com/watch?v=r817RLqmLac
-sheet url :: https://docs.google.com/spreadsheets/d/1qjwfbjsITCQXcdYV88soR3xk-NBUKpjGTuQ57IWG2Dc/edit?usp=sharing
 ```
 ```
+#https://docs.google.com/spreadsheets/d/1kAkUNRKKrgq1DXgAogc5nz43pcYL95n6DwQIqL8x4Es/edit?usp=sharing
+https://script.google.com/macros/s/AKfycbwCwmDCVZto2usXx4SR0nYvCPqaLRJWfTxXDEQmNFkIgFgyO1eOLvEsglYhGzbnSi3m/exec
+{
+    "unit": "Unit1",
+    "type": "TypeA",
+    "in": 101,
+    "out": 50,
+    "total": 150
+}
+```
+```
+code.gs
+function doPost(e) {
+  try {
+    // Parse the incoming POST data as JSON
+    var data = JSON.parse(e.postData.contents);
+    
+    var unit = data.unit;
+    var type = data.type;
+    
+    // Use the current time for the timestamp
+    var currentTimestamp = new Date().toLocaleString(); 
+    
+    // Call the function to update or append data
+    updateOrAppendData(unit, type, {
+      in: data.in || null,   // If data.in is not provided, use null
+      out: data.out || null, // If data.out is not provided, use null
+      total: data.total || null, // If data.total is not provided, use null
+      timestamp: currentTimestamp, // Always update timestamp
+      url: data.url || null, // If data.url is not provided, use null
+      sheet_url: data.sheet_url || null // If sheet_url is not provided, use null
+    });
+    
+    // Return success message
+    return ContentService.createTextOutput("Data has been updated or added.").setMimeType(ContentService.MimeType.TEXT);
+  } catch (error) {
+    // Return error message if something goes wrong
+    return ContentService.createTextOutput("Error: " + error.message).setMimeType(ContentService.MimeType.TEXT);
+  }
+}
+
+function updateOrAppendData(unit, type, inputData) {
+  // Define the sheet and range
+  var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Sheet1');
+  var dataRange = sheet.getDataRange();
+  var dataValues = dataRange.getValues();
+  
+  var headers = dataValues[0]; // Assume the first row is the header
+  var unitCol = headers.indexOf('unit');
+  var typeCol = headers.indexOf('type');
+  var inCol = headers.indexOf('in');
+  var outCol = headers.indexOf('out');
+  var totalCol = headers.indexOf('total');
+  var timestampCol = headers.indexOf('timestamp');
+  var urlCol = headers.indexOf('url');
+  var sheetUrlCol = headers.indexOf('sheet_url'); // New sheet_url column
+
+  var found = false;
+  
+  // Loop through rows to check if 'unit' and 'type' match
+  for (var i = 1; i < dataValues.length; i++) {
+    var row = dataValues[i];
+    if (row[unitCol] === unit && row[typeCol] === type) {
+      // Update the row, but keep existing values if inputData fields are null
+      if (inputData.in !== null) sheet.getRange(i + 1, inCol + 1).setValue(inputData.in);
+      if (inputData.out !== null) sheet.getRange(i + 1, outCol + 1).setValue(inputData.out);
+      if (inputData.total !== null) sheet.getRange(i + 1, totalCol + 1).setValue(inputData.total);
+      
+      // Always update the timestamp (current time)
+      sheet.getRange(i + 1, timestampCol + 1).setValue(inputData.timestamp);
+      
+      if (inputData.url !== null) sheet.getRange(i + 1, urlCol + 1).setValue(inputData.url);
+      if (inputData.sheet_url !== null) sheet.getRange(i + 1, sheetUrlCol + 1).setValue(inputData.sheet_url); // Update sheet_url
+      
+      found = true;
+      break;
+    }
+  }
+  
+  // If no matching row is found, append the new data
+  if (!found) {
+    sheet.appendRow([
+      unit, 
+      type, 
+      inputData.in || "", 
+      inputData.out || "", 
+      inputData.total || "", 
+      inputData.timestamp, 
+      inputData.url || "", 
+      inputData.sheet_url || "" // Append sheet_url
+    ]);
+  }
+}
+
+
+```
+## Step1 : set up google sheet data
+```
+// sheet url :: https://docs.google.com/spreadsheets/d/1qjwfbjsITCQXcdYV88soR3xk-NBUKpjGTuQ57IWG2Dc/edit?usp=sharing
 code.gs :: 
 function doGet(e) {
   var action = e.parameter.action;
