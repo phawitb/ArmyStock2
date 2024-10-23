@@ -21,7 +21,7 @@ if ping -c 1 "$URL" &> /dev/null; then
 fi
 
 sleep 3
-
+cd /home/phawit/Documents/ArmyStock2
 python3 -m streamlit run app.py --server.headless true --server.port 8509 &
 ngrok http http://localhost:8509 &
 
