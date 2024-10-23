@@ -17,7 +17,7 @@ st.markdown("""
         </style>
         """, unsafe_allow_html=True)
 
-config = read_config_yaml('config.yaml')
+config = read_config_yaml('../data/config.yaml')
 
 PERSON_DATA_PATH = config['PERSON_DATA_PATH']
 HISTORY_DATA_PATH = config['HISTORY_DATA_PATH']

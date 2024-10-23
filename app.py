@@ -33,7 +33,7 @@ st.markdown("""
         </style>
         """, unsafe_allow_html=True)
 
-config = read_config_yaml('config.yaml')
+config = read_config_yaml('../data/config.yaml')
 BARCODE_HISTORY = config['BARCODE_HISTORY']
 BARCODE_STATUS = config['BARCODE_STATUS']
 BARCODE_RESET = config['BARCODE_RESET']

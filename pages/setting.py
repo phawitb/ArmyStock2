@@ -39,10 +39,10 @@ def turn_off_hotspot(connection_name):
         print(f"Failed to turn off the hotspot: {e}")
 
 def update_config(key,value):
-    with open('config.yaml', 'r', encoding='utf-8') as file:
+    with open('../data/config.yaml', 'r', encoding='utf-8') as file:
         config = yaml.safe_load(file)
     config[key] = value
-    with open('config.yaml', 'w', encoding='utf-8') as file:
+    with open('../data/config.yaml', 'w', encoding='utf-8') as file:
         yaml.safe_dump(config, file, allow_unicode=True)
     print("UNIT_NAME updated successfully!")
 
@@ -102,7 +102,7 @@ if st.button("connect"):
 
 st.title('Setting')
 
-with open('config.yaml', 'r', encoding='utf-8') as file:
+with open('../data/config.yaml', 'r', encoding='utf-8') as file:
     config = yaml.safe_load(file)
 
 
@@ -136,7 +136,7 @@ if st.button('update'):
     else:
         config['CHECK_MATCH'] = False
 
-    with open('config.yaml', 'w', encoding='utf-8') as file:
+    with open('../data/config.yaml', 'w', encoding='utf-8') as file:
         yaml.safe_dump(config, file, allow_unicode=True)
     st.write("updated successfully!")
 
@@ -155,7 +155,7 @@ if st.button('update'):
 
 
 # config[key] = value
-#     with open('config.yaml', 'w', encoding='utf-8') as file:
+#     with open('../data/config.yaml', 'w', encoding='utf-8') as file:
 #         yaml.safe_dump(config, file, allow_unicode=True)
 #     print("UNIT_NAME updated successfully!")
 

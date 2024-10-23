@@ -17,7 +17,7 @@ st.markdown("""
         </style>
         """, unsafe_allow_html=True)
 
-config = read_config_yaml('config.yaml')
+config = read_config_yaml('../data/config.yaml')
 HISTORY_DATA_PATH = config['HISTORY_DATA_PATH']
 WEAPON_DATA_PATH = config['WEAPON_DATA_PATH']
 IMAGES_HISTORY_PATH = config['IMAGES_HISTORY_PATH']
