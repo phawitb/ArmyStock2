@@ -228,6 +228,9 @@ ngrok http http://localhost:8509
 ```
 # copy run_streamlit.sh to 
 /home/phawit/Documents/run_streamlit.sh
+
+copy config.yaml to
+/home/phawit/Documents/config.yaml
 ```
 ## Dash Board All
 #### https://armyweapon-dashboard.streamlit.app/
