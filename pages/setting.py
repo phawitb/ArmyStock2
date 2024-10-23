@@ -48,6 +48,13 @@ def update_config(key,value):
 
 
 st.title('Wifi')
+
+#save current wifi list
+wifi_networks,active_ssid = list_wifi_networks() 
+with open('wifi_list.txt', 'w') as file:
+    for item in wifi_networks:
+        file.write(f"{item}\n")
+
 with open('wifi_list.txt', 'r') as file:
     wifi_list = [line.strip() for line in file]
 # st.write('wifi_list',wifi_list)
