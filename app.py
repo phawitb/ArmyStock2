@@ -49,6 +49,7 @@ IMAGES_HISTORY_PATH = config['IMAGES_HISTORY_PATH']
 check_match = config['CHECK_MATCH']
 GOOGLE_SHEET_API = config['GOOGLE_SHEET_API']
 GOOGLE_SHEET_URL = config['GOOGLE_SHEET_URL']
+GOOGLE_SHEET_ALL_URL = config['GOOGLE_SHEET_ALL_URL']
 
 LINE_TOKENS = []
 for i in range(1,4):
@@ -61,6 +62,32 @@ if "current_weapon" not in st.session_state:
     st.session_state.current_weapon = ""
 if "current_person" not in st.session_state:
     st.session_state.current_person = ""
+
+def update_all_weapon(unit,weapon_type,weapon_in,weapon_out,weapon_total,ngrok_url,sheet_url):
+    # url = "https://script.google.com/macros/s/AKfycbwCwmDCVZto2usXx4SR0nYvCPqaLRJWfTxXDEQmNFkIgFgyO1eOLvEsglYhGzbnSi3m/exec"
+    url = GOOGLE_SHEET_ALL_URL
+    payload = {}
+
+    if unit and weapon_type:
+        payload['unit'] = unit
+        payload['type'] = weapon_type
+        payload['in'] = weapon_in
+        payload['out'] = weapon_out
+        payload['total'] = weapon_total
+        payload['url'] = ngrok_url
+        payload['sheet_url'] = sheet_url
+
+    print('payload',payload)
+
+    # payload = {
+    #     "unit": "Unit1",
+    #     "type": "TypeA",
+    #     "in": 101,
+    #     "out": 50,
+    #     "total": 150
+    # }
+    response = requests.post(url, json=payload)
+    response.text
 
 def play_voice(action):
     pygame.mixer.init()
@@ -437,6 +464,22 @@ else:
                 col2.title(f':blue[ยอดเดิม {len(weapons_ins[t]) + len(weapons_outs[t])}]')
                 col3.title(f':red[เบิก {len(weapons_outs[t])}]')
                 col4.title(f'คงเหลือ {len(weapons_ins[t])}')
+
+        #update sheet all
+        for t in unique_types:
+            unit = UNIT_NAME
+            weapon_type = t
+            weapon_in = len(weapons_ins[t])
+            weapon_out = len(weapons_outs[t])
+            weapon_total = len(weapons_ins[t]) + len(weapons_outs[t])
+            ngrok_url = get_ngrok_url()
+            sheet_url = GOOGLE_SHEET_URL
+
+            try:
+                thread3 = threading.Thread(target=update_all_weapon, args=(unit,weapon_type,weapon_in,weapon_out,weapon_total,ngrok_url,sheet_url))
+                thread3.start()
+            except:
+                pass
 
         st.markdown("""---""")
 
