@@ -202,6 +202,10 @@ ngrok http http://localhost:8509
 # copy run_streamlit.sh to 
 /home/phawit/Documents/run_streamlit.sh
 ```
-
+## Dash Board All
+#### https://armyweapon-dashboard.streamlit.app/
+```
+ code in https://github.com/phawitb/ArmyStock2-Dashboard.git
+```
 
 
