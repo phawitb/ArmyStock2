@@ -11,11 +11,40 @@ https://script.google.com/macros/s/AKfycbwCwmDCVZto2usXx4SR0nYvCPqaLRJWfTxXDEQmN
     "type": "TypeA",
     "in": 101,
     "out": 50,
-    "total": 150
+    "total": 150,
+    "url": "https://example.com",
+    "sheet_url": "https://example.com2"
 }
 ```
 ```
 code.gs
+function doGet() {
+  return getAllData();
+}
+
+function getAllData() {
+  var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Sheet1');
+  var dataRange = sheet.getDataRange();
+  var data = dataRange.getValues();
+  
+  // Get headers from the first row
+  var headers = data[0];
+  
+  // Create array of objects where keys are the headers and values are the row data
+  var jsonData = [];
+  for (var i = 1; i < data.length; i++) {
+    var rowData = {};
+    for (var j = 0; j < headers.length; j++) {
+      rowData[headers[j]] = data[i][j];
+    }
+    jsonData.push(rowData);
+  }
+  
+  // Return the JSON response
+  return ContentService.createTextOutput(JSON.stringify(jsonData))
+                       .setMimeType(ContentService.MimeType.JSON);
+}
+
 function doPost(e) {
   try {
     // Parse the incoming POST data as JSON
@@ -97,8 +126,6 @@ function updateOrAppendData(unit, type, inputData) {
     ]);
   }
 }
-
-
 ```
 ## Step1 : set up google sheet data
 ```
