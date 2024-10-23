@@ -343,9 +343,10 @@ elif input_text == BARCODE_HOTSPOT or input_text == 'shotspot':
 
         #save current wifi list
         wifi_networks,active_ssid = list_wifi_networks() 
-        with open('wifi_list.txt', 'w') as file:
-            for item in wifi_networks:
-                file.write(f"{item}\n")
+        if active_ssid != 'MyHotspot':
+            with open('wifi_list.txt', 'w') as file:
+                for item in wifi_networks:
+                    file.write(f"{item}\n")
 
         interface_name = get_wifi_interface()
         set_hotspot("MyHotspot", "abcd1234",interface_name)
@@ -390,9 +391,10 @@ elif input_text == BARCODE_SETTING or input_text == 's':
         else:
             #save current wifi list
             wifi_networks,active_ssid = list_wifi_networks() 
-            with open('wifi_list.txt', 'w') as file:
-                for item in wifi_networks:
-                    file.write(f"{item}\n")
+            if active_ssid != 'MyHotspot':
+                with open('wifi_list.txt', 'w') as file:
+                    for item in wifi_networks:
+                        file.write(f"{item}\n")
 
             #find current ip
             interface_name = get_wifi_interface()
@@ -400,33 +402,35 @@ elif input_text == BARCODE_SETTING or input_text == 's':
 
             st.subheader(f'current_ip {current_ip}')
             if not current_ip:
-                set_hotspot("MyHotspot", "abcd1234",interface_name)
-                gen_wifi_qr("MyHotspot", "abcd1234")
+                # set_hotspot("MyHotspot", "abcd1234",interface_name)
+                # gen_wifi_qr("MyHotspot", "abcd1234")
 
-                current_ip = get_ip(interface_name)
-
-            cols = st.columns(3)
-
-            #visualize 
-            if active_ssid == "MyHotspot" or not active_ssid:
-                cols[0].subheader('STEP1 : Connect to MyHotspot')
-                cols[0].write('ssid: MyHotspot')
-                cols[0].write('password: abcd1234')
-            
-                cols[0].image('qrcode_wifi.png',caption="qrcode_wifi")
-
+                # current_ip = get_ip(interface_name)
+                st.write('No internet connection')
             else:
-                cols[0].subheader(f'STEP1 : Connect to ssid: {active_ssid}')
 
-            url = f"http://{current_ip}:8509/setting"
-            generate_link_qr(url)
-            cols[1].subheader(f'STEP2 : Connect to {url}')
-            cols[1].image('qrcode_link.png')
+                cols = st.columns(3)
 
-            cols[2].subheader(f'Sheet URL : {GOOGLE_SHEET_URL}')
-            generate_link_qr(GOOGLE_SHEET_URL, filename="qrcode_link_sheet.png")
-            # cols = st.columns(5)
-            cols[2].image("qrcode_link_sheet.png")
+                #visualize 
+                if active_ssid == "MyHotspot" or not active_ssid:
+                    cols[0].subheader('STEP1 : Connect to MyHotspot')
+                    cols[0].write('ssid: MyHotspot')
+                    cols[0].write('password: abcd1234')
+                
+                    cols[0].image('qrcode_wifi.png',caption="qrcode_wifi")
+
+                else:
+                    cols[0].subheader(f'STEP1 : Connect to ssid: {active_ssid}')
+
+                url = f"http://{current_ip}:8509/setting"
+                generate_link_qr(url)
+                cols[1].subheader(f'STEP2 : Connect to {url}')
+                cols[1].image('qrcode_link.png')
+
+                cols[2].subheader(f'Sheet URL : {GOOGLE_SHEET_URL}')
+                generate_link_qr(GOOGLE_SHEET_URL, filename="qrcode_link_sheet.png")
+                # cols = st.columns(5)
+                cols[2].image("qrcode_link_sheet.png")
 
 # main
 else:
