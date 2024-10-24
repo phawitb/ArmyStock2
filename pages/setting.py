@@ -3,6 +3,7 @@ import yaml
 from utils import list_wifi_networks,connect_to_wifi
 import subprocess
 import time 
+import os
 
 st.set_page_config(layout="wide", initial_sidebar_state="collapsed")
 with open( "style.css" ) as css:
